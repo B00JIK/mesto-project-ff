@@ -6,7 +6,7 @@ const newCardPopup = document.querySelector('.popup_type_new-card');
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-function addCard(placeName, placeLink) {
+function createCard(placeName, placeLink) {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     cardElement.querySelector('.card__image').setAttribute('src', placeLink);
     cardElement.querySelector('.card__image').setAttribute('alt', placeName);
@@ -17,22 +17,22 @@ function addCard(placeName, placeLink) {
       evt.target.classList.toggle('card__like-button_is-active');
     });
 
-    deleteCard(cardElement);
-
+    const deleteButton = cardElement.querySelector('.card__delete-button');
+    deleteButton.addEventListener('click', function () { 
+      deleteCallback(cardElement); 
+  });
+    
     return cardElement;
   }
 
 // @todo: Функция удаления карточки
 
-function deleteCard(cardElement) {
-    const deleteButton = cardElement.querySelector('.card__delete-button');
-    deleteButton.addEventListener('click', function () {
-        cardElement.remove();
-    });
+function deleteCallback(cardElement) {
+  cardElement.remove(); 
 }
 // @todo: Вывести карточки на страницу
 
 initialCards.forEach(function (element) {
-    const cardElement = addCard(element.name, element.link);
+    const cardElement = createCard(element.name, element.link);
     cardPlaces.append(cardElement);
 });
