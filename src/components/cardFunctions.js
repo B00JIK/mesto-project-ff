@@ -1,7 +1,6 @@
-import { openImg } from "./modal";
-
-export function createCard(placeName, placeLink) {
-    const cardPlaces = document.querySelector('.places__list');
+import { cardPlaces, placeInput, linkInput } from "..";
+import { closePopup } from "./modal";
+export function createCard(placeName, placeLink, callback) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     cardElement.querySelector('.card__image').setAttribute('src', placeLink);
@@ -9,16 +8,16 @@ export function createCard(placeName, placeLink) {
   
     cardElement.querySelector('.card__title').textContent = placeName;
   
-    cardElement.querySelector('.card__like-button').addEventListener('click', function (evt) {
-      like();
-    });
+    cardElement.querySelector('.card__like-button').addEventListener('click', like);
 
     const deleteButton = cardElement.querySelector('.card__delete-button');
     deleteButton.addEventListener('click', function () { 
       deleteCallback(cardElement); 
     });
 
-    cardPlaces.addEventListener('click', openImg);
+    const cardImage = cardElement.querySelector('.card__image');
+
+    cardImage.addEventListener('click', callback);
   
     return cardElement;
   };
@@ -33,13 +32,12 @@ export function createCard(placeName, placeLink) {
 
 export function addNewCard(evt) {
     evt.preventDefault();
-    const cardPlaces = document.querySelector('.places__list');
-    const placeInput = document.querySelector('.popup__input_type_card-name');
-    const linkInput = document.querySelector('.popup__input_type_url');
     const placeValue = placeInput.value;
     const linkValue = linkInput.value;
     const newCard = createCard(placeValue, linkValue);
     cardPlaces.prepend(newCard);
     placeInput.value = '';
     linkInput.value = '';
+    const popupOpened = document.querySelector('.popup_is-opened');
+    popupOpened.addEventListener('submit', closePopup(popupOpened));
   }
