@@ -30,14 +30,3 @@ export function createCard(placeName, placeLink, callback) {
     cardElement.remove(); 
   };
 
-export function addNewCard(evt) {
-    evt.preventDefault();
-    const placeValue = placeInput.value;
-    const linkValue = linkInput.value;
-    const newCard = createCard(placeValue, linkValue);
-    cardPlaces.prepend(newCard);
-    placeInput.value = '';
-    linkInput.value = '';
-    const popupOpened = document.querySelector('.popup_is-opened');
-    popupOpened.addEventListener('submit', closePopup(popupOpened));
-  }

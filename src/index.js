@@ -1,7 +1,7 @@
 import './index.css';
 import {initialCards} from './components/cards.js';
 import {closePopup, openPopup} from './components/modal.js';
-import { createCard, addNewCard} from './components/cardFunctions.js';
+import { createCard} from './components/cardFunctions.js';
 
 export const cardPlaces = document.querySelector('.places__list');
 export const placeInput = document.querySelector('.popup__input_type_card-name');
@@ -22,7 +22,6 @@ const pageName = document.querySelector('.profile__title');
 const pageDescription = document.querySelector('.profile__description');
 
 
-
 function openImg(evt) {
   popupImageCaption.textContent = evt.target.alt;
   imagePopupClass.src = evt.target.src;
@@ -32,14 +31,24 @@ function openImg(evt) {
   };
 };
 
-function handleFormSubmit(evt) {
-  const popupOpened = document.querySelector('.popup_is-opened');
+function addNewCard(evt) {
+  evt.preventDefault();
+  const placeValue = placeInput.value;
+  const linkValue = linkInput.value;
+  const newCard = createCard(placeValue, linkValue);
+  cardPlaces.prepend(newCard);
+  placeInput.value = '';
+  linkInput.value = '';
+  closePopup(newCardPopup);
+}
+
+function profileEditForm(evt) {
   evt.preventDefault();
   const nameValue = nameInput.value;
   const jobValue = jobInput.value;
   pageName.textContent = nameValue;
   pageDescription.textContent = jobValue;
-  popupOpened.addEventListener('submit', closePopup(popupOpened));
+  closePopup(editProfilePopup);
 }
 
 // @todo: Вывести карточки на страницу
@@ -51,7 +60,7 @@ initialCards.forEach(function (element) {
 
 closeButtons.forEach(function(element) {
   element.addEventListener('click', function() {  
-      const popupOpened = document.querySelector('.popup_is-opened');
+      const popupOpened = element.closest('.popup_is-opened');
       closePopup(popupOpened);
   });
 });
@@ -66,7 +75,7 @@ profileEdit.addEventListener('click', function() {
   openPopup(editProfilePopup);
 });
 
-formElementProfile.addEventListener('submit', handleFormSubmit); 
+formElementProfile.addEventListener('submit', profileEditForm); 
 
 formElementPlace.addEventListener('submit', addNewCard);
 
