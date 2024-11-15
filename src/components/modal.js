@@ -13,7 +13,6 @@ export function closePopupEsc(evt) {
 
 export function closePopupOverlay(evt) {
     if (evt.currentTarget === evt.target) {
-      console.log(evt.target);
         closePopup(evt.target);
       };
 };

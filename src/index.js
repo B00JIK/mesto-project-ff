@@ -35,7 +35,7 @@ function addNewCard(evt) {
   evt.preventDefault();
   const placeValue = placeInput.value;
   const linkValue = linkInput.value;
-  const newCard = createCard(placeValue, linkValue);
+  const newCard = createCard(placeValue, linkValue, openImg);
   cardPlaces.prepend(newCard);
   placeInput.value = '';
   linkInput.value = '';

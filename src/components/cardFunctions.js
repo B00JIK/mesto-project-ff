@@ -1,5 +1,3 @@
-import { cardPlaces, placeInput, linkInput } from "..";
-import { closePopup } from "./modal";
 export function createCard(placeName, placeLink, callback) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
