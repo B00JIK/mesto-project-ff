@@ -1,6 +1,6 @@
 import {deleteCard, likeCard, deleteLike} from './api';
 
-export function createCard(cardData, callback, myId) {
+export function createCard(cardData, callback, myId, likeCallback, deleteCallback) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     const deleteButton = cardElement.querySelector('.card__delete-button');
@@ -19,7 +19,7 @@ export function createCard(cardData, callback, myId) {
       }
     })
     cardLikeButton.addEventListener('click', function(evt) {
-      like(evt, cardLikeButton, cardData['_id'], likeCount)
+      likeCallback(evt, cardLikeButton, cardData['_id'], likeCount)
     });
 
 
@@ -51,11 +51,19 @@ export function createCard(cardData, callback, myId) {
           evt.target.classList.toggle('card__like-button_is-active');
           likeCount.textContent = cardData.likes.length;
         })
+        .catch(function(err) {
+          console.log(err);
+        })
     }
   }
 
-  export function deleteCallback(cardElement, cardId) {
-    deleteCard(cardId);
-    cardElement.remove(); 
+  export function deleteMyCard(cardElement, cardId) {
+    deleteCard(cardId)
+      .then(function() {
+        cardElement.remove(); 
+      })
+      .catch(function(err) {
+        console.log(err);
+      })
   };
 

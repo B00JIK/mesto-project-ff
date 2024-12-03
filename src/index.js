@@ -1,8 +1,8 @@
 import './index.css';
 import {initialCards} from './components/cards.js';
 import {closePopup, openPopup} from './components/modal.js';
-import { createCard} from './components/cardFunctions.js';
-import { clearValidation, enableValidation } from './components/validation.js';
+import { createCard, like, deleteMyCard} from './components/cardFunctions.js';
+import { clearValidation, enableValidation} from './components/validation.js';
 import { userInfo, usersCardsList, editProfile, addCard, editProfileImage} from './components/api.js';
 
 export const cardPlaces = document.querySelector('.places__list');
@@ -28,6 +28,14 @@ const formElementAvatar = document.forms['new-avatar'];
 const editAvatarFormInput = formElementAvatar.elements.link;
 const profileImage = document.querySelector('.profile__image');
 let myId = '';
+const configSelector = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_error',
+  errorClass: 'popup__input_invalid'
+}
 
 
 export function openImg(evt) {
@@ -43,18 +51,11 @@ function addNewCard(evt) {
   evt.preventDefault();
   const placeValue = placeInput.value;
   const linkValue = linkInput.value;
-  const saveButton = formElementPlace.querySelector('.popup__button');
+  const saveButton = formElementPlace.querySelector(configSelector.submitButtonSelector);
   saveButton.textContent = 'Сохранение...';
-  const myId = userInfo()
-    .then(function(data) {
-      return data['_id'];
-    })
-    .catch(function(err) {
-      console.log(err);
-    })
   addCard(placeValue, linkValue)
     .then(function(newCardData) {
-      const newCard = createCard(newCardData, openImg, myId);
+      const newCard = createCard(newCardData, openImg, myId, like, deleteMyCard);
       cardPlaces.prepend(newCard);
       formElementPlace.reset();
       closePopup(newCardPopup);
@@ -71,7 +72,7 @@ function profileEditForm(evt) {
   evt.preventDefault();
   const jobValue = jobInput.value;
   const nameValue = nameInput.value;
-  const saveButton = formElementProfile.querySelector('.popup__button');
+  const saveButton = formElementProfile.querySelector(configSelector.submitButtonSelector);
   saveButton.textContent = 'Сохранение...';
   editProfile(nameValue, jobValue) 
     .then(function() {
@@ -89,7 +90,7 @@ function profileEditForm(evt) {
 
 function avatarEditForm(evt) {
   evt.preventDefault();
-  const saveButton = formElementAvatar.querySelector('.popup__button');
+  const saveButton = formElementAvatar.querySelector(configSelector.submitButtonSelector);
   saveButton.textContent = 'Сохранение...';
   editProfileImage(editAvatarFormInput.value)
     .then(function(data) {
@@ -109,34 +110,35 @@ closeButtons.forEach(function(element) {
   element.addEventListener('click', function() {  
       const popupOpened = element.closest('.popup_is-opened');
       closePopup(popupOpened);
-      if (element.classList.contains('popup__button')) {
-        clearValidation(popupOpened);
-      }
   });
 });
 
 addButton.addEventListener('click', function() {
-  formElementPlace.setAttribute('novalidate', '');
+  const buttonElement = newCardPopup.querySelector(configSelector.submitButtonSelector);
+  buttonElement.classList.add(configSelector.inactiveButtonClass);
   openPopup(newCardPopup);
+  clearValidation(newCardPopup, configSelector);
 });
 
 avatarEdit.addEventListener('click', function() {
-  formElementPlace.setAttribute('novalidate', '');
+  const buttonElement = avatarEditPopup.querySelector(configSelector.submitButtonSelector);
+  buttonElement.classList.add(configSelector.inactiveButtonClass);
   openPopup(avatarEditPopup);
+  clearValidation(avatarEditPopup, configSelector);
 });
 
 profileEdit.addEventListener('click', function() {
-  formElementProfile.setAttribute('novalidate', '');
   nameInput.value = pageName.textContent;
   jobInput.value = pageDescription.textContent;
   openPopup(editProfilePopup);
+  clearValidation(editProfilePopup, configSelector);
 });
 
-formElementProfile.addEventListener('submit', profileEditForm); 
+formElementProfile.addEventListener('submit', profileEditForm);
 formElementPlace.addEventListener('submit', addNewCard);
 formElementAvatar.addEventListener('submit', avatarEditForm);
 
-enableValidation();
+enableValidation(configSelector);
 
 const promisList = [userInfo(), usersCardsList()];
 
@@ -148,9 +150,11 @@ Promise.all(promisList)
     myId = userInfo['_id'];
 
     usersCardsList.forEach(function(element) {
-      const cardElement = createCard(element, openImg, myId);
+      const cardElement = createCard(element, openImg, myId, like, deleteMyCard);
       cardPlaces.append(cardElement);
-    });
-  });
-
+    })
+  })
+  .catch(function(err) {
+    console.log(err);
+    })
 
