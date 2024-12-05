@@ -34,7 +34,8 @@ const configSelector = {
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_error',
-  errorClass: 'popup__input_invalid'
+  errorClass: 'popup__input_invalid',
+  editPopupClass: 'popup_type_edit'
 }
 
 
