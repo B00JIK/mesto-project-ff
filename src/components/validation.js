@@ -76,7 +76,9 @@ export function clearValidation(element, config) {
         inputElement.classList.remove(config.errorClass);
         formError.textContent = '';
     });
-    const buttonElement = element.querySelector(config.submitButtonSelector); 
-    console.log(element);
-    buttonElement.classList.remove(config.inactiveButtonClass);
+
+    if (element.classList.contains('popup_type_edit') === true) {
+        const buttonElement = element.querySelector(config.submitButtonSelector); 
+        buttonElement.classList.remove(config.inactiveButtonClass);
+    }
 }

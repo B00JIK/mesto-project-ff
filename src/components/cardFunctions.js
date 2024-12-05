@@ -45,6 +45,9 @@ export function createCard(cardData, callback, myId, likeCallback, deleteCallbac
           evt.target.classList.toggle('card__like-button_is-active');
           likeCount.textContent = cardData.likes.length;
         })
+        .catch(function(err) {
+          console.log(err);
+        })
     } else {
       likeCard(id)
         .then(function(cardData) {
