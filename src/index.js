@@ -35,7 +35,6 @@ const configSelector = {
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_error',
   errorClass: 'popup__input_invalid',
-  editPopupClass: 'popup_type_edit'
 }
 
 
@@ -115,24 +114,20 @@ closeButtons.forEach(function(element) {
 });
 
 addButton.addEventListener('click', function() {
-  const buttonElement = newCardPopup.querySelector(configSelector.submitButtonSelector);
-  buttonElement.classList.add(configSelector.inactiveButtonClass);
-  openPopup(newCardPopup);
   clearValidation(newCardPopup, configSelector);
+  openPopup(newCardPopup);
 });
 
 avatarEdit.addEventListener('click', function() {
-  const buttonElement = avatarEditPopup.querySelector(configSelector.submitButtonSelector);
-  buttonElement.classList.add(configSelector.inactiveButtonClass);
-  openPopup(avatarEditPopup);
   clearValidation(avatarEditPopup, configSelector);
+  openPopup(avatarEditPopup);
 });
 
 profileEdit.addEventListener('click', function() {
   nameInput.value = pageName.textContent;
   jobInput.value = pageDescription.textContent;
-  openPopup(editProfilePopup);
   clearValidation(editProfilePopup, configSelector);
+  openPopup(editProfilePopup);
 });
 
 formElementProfile.addEventListener('submit', profileEditForm);

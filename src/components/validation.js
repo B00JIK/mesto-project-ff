@@ -51,6 +51,7 @@ function checkInputValidity(element, buttonElement, inputList, config) {
 function setEventListeners(element, config) {
     const inputList = Array.from(element.querySelectorAll(config.inputSelector));
     const buttonElement = element.querySelector(config.submitButtonSelector);
+    // buttonState(inputList, buttonElement, config);
     inputList.forEach(function(inputElement) {
         inputElement.addEventListener('input', function() {
             checkInputValidity(inputElement, buttonElement, inputList, config);
@@ -69,15 +70,12 @@ export function enableValidation(config) {
 };
 
 export function clearValidation(element, config) {
-    const inputFormList = element.querySelectorAll(config.inputSelector);
+    const inputFormList = Array.from(element.querySelectorAll(config.inputSelector));
+    const buttonElement = element.querySelector(config.submitButtonSelector);
     inputFormList.forEach(function(inputElement) {
-        const formError = element.querySelector(`.${inputElement.id}-error`);
-        formError.classList.remove(config.inputErrorClass);
+        hideError(inputElement, config);
         inputElement.classList.remove(config.errorClass);
-        formError.textContent = '';
     });
-    if (element.classList.contains(config.editPopupClass) === true) {
-        const buttonElement = element.querySelector(config.submitButtonSelector); 
-        buttonElement.classList.remove(config.inactiveButtonClass);
-    }
+    buttonElement.classList.add(config.inactiveButtonClass);
+    buttonElement.setAttribute('disabled', '');
 }
